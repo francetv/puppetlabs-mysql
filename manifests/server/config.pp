@@ -23,6 +23,23 @@ class mysql::server::config {
   }
 
   if $mysql::server::manage_config_file  {
+    if has_key($options['mysqld'], 'innodb_log_file_size') {
+      file { "${options['mysqld']['datadir']}/old_innodb_log_file_size":
+        ensure  => directory,
+        mode    => '0755',
+        owner   => 'mysql',
+        group   => 'mysql',
+      }
+
+      augeas{ 'backup_old_innodb_log_file_size':
+        context => $mysql::server::config_file,
+        changes => "mv ${options['mysqld']['datadir']}/ib_logfile* ${options['mysqld']['datadir']}/old_innodb_log_file_size/",
+        onlyif  => "match mysqld/innodb_log_file_size != ${options['mysqld']['innodb_log_file_size']}",
+        require => File["${options['mysqld']['datadir']}/old_innodb_log_file_size"],
+        before  => File[$mysql::server::config_file],
+      }
+    }
+
     file { $mysql::server::config_file:
       content => template('mysql/my.cnf.erb'),
       mode    => '0644',
