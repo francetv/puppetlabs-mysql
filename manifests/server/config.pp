@@ -32,7 +32,7 @@ class mysql::server::config {
       }
 
       exec{ 'mv_old_innodb_log_file' :
-        command => "grep innodb_log_file_size ${mysql::server::config_file}|grep ${options['mysqld']['innodb_log_file_size']} || (service mysql stop && mv -f ${options['mysqld']['datadir']}/ib_logfile* ${options['mysqld']['datadir']}/old_innodb_log_file/)",
+        command => "grep innodb_log_file_size ${mysql::server::config_file}|grep ${options['mysqld']['innodb_log_file_size']} || mv -f ${options['mysqld']['datadir']}/ib_logfile* ${options['mysqld']['datadir']}/old_innodb_log_file/",
         path    => ['/bin', '/usr/bin'],
         require => File["${options['mysqld']['datadir']}/old_innodb_log_file"],
         before  => File[$mysql::server::config_file],
