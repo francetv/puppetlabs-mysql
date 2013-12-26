@@ -195,6 +195,7 @@ class mysql::params {
       'basedir'               => $mysql::params::basedir,
       'bind_address'          => '127.0.0.1',
       'datadir'               => $mysql::params::datadir,
+      'old_innodb_log_dir'    => '/tmp/old_innodb_log',
       'expire_logs_days'      => '10',
       'key_buffer'            => '16M',
       'log_error'             => $mysql::params::log_error,
