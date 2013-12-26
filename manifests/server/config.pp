@@ -24,7 +24,7 @@ class mysql::server::config {
 
   if $mysql::server::manage_config_file  {
     if has_key($options['mysqld'], 'innodb_log_file_size') {
-      file { "${options['mysqld']['old_innodb_log_dir']}":
+      file { '/tmp/old_innodb_log_dir':
         ensure  => directory,
         mode    => '0755',
         owner   => 'mysql',
@@ -32,9 +32,9 @@ class mysql::server::config {
       }
 
       exec{ 'mv_old_innodb_log_file' :
-        command => "grep innodb_log_file_size ${mysql::server::config_file}|grep ${options['mysqld']['innodb_log_file_size']} || mv -f ${options['mysqld']['datadir']}/ib_logfile* ${options['mysqld']['old_innodb_log_dir']}/",
+        command => "grep innodb_log_file_size ${mysql::server::config_file}|grep ${options['mysqld']['innodb_log_file_size']} || mv -f ${options['mysqld']['datadir']}/ib_logfile* /tmp/old_innodb_log_dir/",
         path    => ['/bin', '/usr/bin'],
-        require => File["${options['mysqld']['old_innodb_log_dir']}"],
+        require => File['/tmp/old_innodb_log_dir'],
         before  => File[$mysql::server::config_file],
       }
     }

@@ -7,7 +7,6 @@ class mysql(
   $config_file           = '',
   $config_template       = '',
   $datadir               = '',
-  $old_innodb_log_dir    = '',
   $default_engine        = '',
   $etc_root_password     = '',
   $log_error             = '',
